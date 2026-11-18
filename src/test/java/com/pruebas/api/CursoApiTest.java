@@ -32,4 +32,19 @@ public class CursoApiTest {
                 .statusCode(200)
                 .body("size()", greaterThan(0));
     }
+
+    @Test
+    @DisplayName("ESCENARIO 2: consultar el curso con id 1")
+    void consultarCursoPorId() {
+        Response r = given()
+                .when()
+                .get("/api/cursos/{id}", 1)
+                .then()
+                .statusCode(200)
+                .body("nombre", equalTo("Pruebas de Software"))
+                .extract().response();
+
+        double precio = r.jsonPath().getDouble("precio");
+        assertTrue(precio > 0, "El precio debe ser mayor que cero");
+    }
 }
