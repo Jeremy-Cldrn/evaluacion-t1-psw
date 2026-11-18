@@ -69,4 +69,21 @@ public class InscripcionServiceTest {
         assertEquals("Estudiante ya inscrito", ex.getMessage());
         verify(repository, never()).save(any(Inscripcion.class));
     }
+
+    @Test
+    @DisplayName("CASO 3: listar las inscripciones de un estudiante")
+    void listarInscripcionesPorEstudiante() {
+        List<Inscripcion> inscripciones = List.of(
+                crearInscripcion(1L, "I2024001", 1L),
+                crearInscripcion(2L, "I2024001", 3L));
+        when(repository.findByCodigoEstudiante("I2024001")).thenReturn(inscripciones);
+
+        List<Inscripcion> resultado = service.listarPorEstudiante("I2024001");
+
+        assertEquals(2, resultado.size());
+        for (Inscripcion i : resultado) {
+            assertEquals("I2024001", i.getCodigoEstudiante());
+        }
+        verify(repository, times(1)).findByCodigoEstudiante("I2024001");
+    }
 }
