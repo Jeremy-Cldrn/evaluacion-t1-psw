@@ -11,3 +11,7 @@ Feature: Inscripción a cursos
     When se inscribe en el curso 2
     Then el sistema responde con código 200
     And la inscripción devuelta corresponde al estudiante y al curso 2
+
+  Scenario: Inscripción duplicada
+    When el estudiante "I2024001" intenta inscribirse de nuevo en el curso 1
+    Then el sistema rechaza la inscripción con un código de error
