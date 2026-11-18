@@ -57,4 +57,16 @@ public class InscripcionServiceTest {
         assertEquals(2L, resultado.getCursoId());
         verify(repository, times(1)).save(nueva);
     }
+
+    @Test
+    @DisplayName("CASO 2: intentar inscribir a un estudiante ya inscrito")
+    void inscribirEstudianteDuplicadoLanzaExcepcion() {
+        Inscripcion duplicada = crearInscripcion(null, "I2024001", 1L);
+        when(repository.existsByCodigoEstudianteAndCursoId("I2024001", 1L)).thenReturn(true);
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.inscribir(duplicada));
+
+        assertEquals("Estudiante ya inscrito", ex.getMessage());
+        verify(repository, never()).save(any(Inscripcion.class));
+    }
 }
