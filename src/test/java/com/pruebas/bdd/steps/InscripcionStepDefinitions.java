@@ -54,6 +54,11 @@ public class InscripcionStepDefinitions {
         respuesta = inscribir(codigoEstudiante, cursoId);
     }
 
+    @When("el estudiante {string} intenta inscribirse de nuevo en el curso {int}")
+    public void intentaInscribirseDeNuevo(String codigo, int cursoId) {
+        respuesta = inscribir(codigo, cursoId);
+    }
+
     @Then("el sistema responde con código {int}")
     public void elSistemaRespondeConCodigo(int codigo) {
         assertEquals(codigo, respuesta.statusCode());
@@ -63,5 +68,10 @@ public class InscripcionStepDefinitions {
     public void laInscripcionCorresponde(int cursoId) {
         assertEquals(codigoEstudiante, respuesta.jsonPath().getString("codigoEstudiante"));
         assertEquals(cursoId, respuesta.jsonPath().getInt("cursoId"));
+    }
+
+    @Then("el sistema rechaza la inscripción con un código de error")
+    public void elSistemaRechaza() {
+        assertTrue(respuesta.statusCode() >= 400, "Se esperaba un error, pero llegó " + respuesta.statusCode());
     }
 }
