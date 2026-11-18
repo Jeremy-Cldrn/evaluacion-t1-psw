@@ -38,4 +38,30 @@ public class InscripcionStepDefinitions {
                 .when()
                 .post("/api/inscripciones");
     }
+
+    @Given("el estudiante {string} ya está inscrito en el curso {int}")
+    public void elEstudianteYaEstaInscrito(String codigo, int cursoId) {
+        System.out.println("Precondición: " + codigo + " inscrito en el curso " + cursoId + " (DataLoader)");
+    }
+
+    @Given("un estudiante nuevo con un código distinto en cada ejecución")
+    public void unEstudianteNuevo() {
+        codigoEstudiante = "I" + System.currentTimeMillis();
+    }
+
+    @When("se inscribe en el curso {int}")
+    public void seInscribeEnElCurso(int cursoId) {
+        respuesta = inscribir(codigoEstudiante, cursoId);
+    }
+
+    @Then("el sistema responde con código {int}")
+    public void elSistemaRespondeConCodigo(int codigo) {
+        assertEquals(codigo, respuesta.statusCode());
+    }
+
+    @And("la inscripción devuelta corresponde al estudiante y al curso {int}")
+    public void laInscripcionCorresponde(int cursoId) {
+        assertEquals(codigoEstudiante, respuesta.jsonPath().getString("codigoEstudiante"));
+        assertEquals(cursoId, respuesta.jsonPath().getInt("cursoId"));
+    }
 }
