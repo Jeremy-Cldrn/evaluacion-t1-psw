@@ -40,4 +40,21 @@ public class InscripcionServiceTest {
         i.setCursoId(cursoId);
         return i;
     }
+
+    @Test
+    @DisplayName("CASO 1: inscribir correctamente a un estudiante")
+    void inscribirEstudianteCorrectamente() {
+        Inscripcion nueva = crearInscripcion(null, "I2024050", 2L);
+        Inscripcion guardada = crearInscripcion(10L, "I2024050", 2L);
+        when(repository.existsByCodigoEstudianteAndCursoId("I2024050", 2L)).thenReturn(false);
+        when(repository.save(nueva)).thenReturn(guardada);
+
+        Inscripcion resultado = service.inscribir(nueva);
+
+        assertNotNull(resultado);
+        assertEquals(10L, resultado.getId());
+        assertEquals("I2024050", resultado.getCodigoEstudiante());
+        assertEquals(2L, resultado.getCursoId());
+        verify(repository, times(1)).save(nueva);
+    }
 }
