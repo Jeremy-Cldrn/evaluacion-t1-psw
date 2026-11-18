@@ -21,4 +21,15 @@ public class CursoApiTest {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
     }
+
+    @Test
+    @DisplayName("ESCENARIO 1: consultar todos los cursos")
+    void consultarTodosLosCursos() {
+        given()
+                .when()
+                .get("/api/cursos")
+                .then()
+                .statusCode(200)
+                .body("size()", greaterThan(0));
+    }
 }
